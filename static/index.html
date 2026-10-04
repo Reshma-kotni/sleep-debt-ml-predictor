@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Science & ML Workbench | Bedtime Screentime & Sleep Debt</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Minimal Sticky Navigation Header -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-text">
+        <h1>Sleep Debt AI Workbench</h1>
+        <span>Data Science & Predictive ML Analytics</span>
+      </div>
+    </div>
+
+    <nav class="nav-links">
+      <button class="nav-btn active" data-target="section-raw">Raw Data</button>
+      <button class="nav-btn" data-target="section-cleaned">Cleaned Data</button>
+      <button class="nav-btn" data-target="section-eda">EDA Overview</button>
+      <button class="nav-btn" data-target="section-vis">Visualizations</button>
+      <button class="nav-btn" data-target="section-ml">ML Models</button>
+      <button class="nav-btn" data-target="section-compare">Model Compare</button>
+    </nav>
+
+    <div class="dataset-badge">
+      bedtime_screentime_sleep_debt.csv • 8,500 Rows
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- 1. Data Preview (Raw Dataset) -->
+    <section id="section-raw" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>1. Data Preview (Raw Dataset)</h2>
+          <span class="section-tag">Original CSV • Up to 150 Rows</span>
+        </div>
+        <div class="controls-group">
+          <input type="text" id="raw-search" class="search-box" placeholder="Filter raw data...">
+        </div>
+      </div>
+      <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 0.875rem;">
+        Raw dataset view showing sticky headers, row index column (# 0 to 149), and missing values highlighted with <span class="nan-badge">NaN</span> badges.
+      </p>
+      <div class="table-wrapper">
+        <table id="raw-table" class="data-table">
+          <thead id="raw-thead"></thead>
+          <tbody id="raw-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 2. After Cleaning Data Preview -->
+    <section id="section-cleaned" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>2. After Cleaning & Feature Engineering Data Preview</h2>
+          <span class="section-tag">Post-Preprocessing</span>
+        </div>
+        <div class="controls-group">
+          <input type="text" id="clean-search" class="search-box" placeholder="Filter cleaned data...">
+        </div>
+      </div>
+      <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 0.875rem;">
+        Preprocessed data displaying imputed values, categorical encodings, binned categories, and engineered features (screen intensity, sleep efficiency).
+      </p>
+      <div class="table-wrapper">
+        <table id="clean-table" class="data-table">
+          <thead id="clean-thead"></thead>
+          <tbody id="clean-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 3. EDA Process (Exploratory Data Analysis) -->
+    <section id="section-eda" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>3. EDA Process (Exploratory Data Analysis)</h2>
+          <span class="section-tag">Overview & Statistics</span>
+        </div>
+      </div>
+
+      <!-- KPI Summary Tiles -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header">Total Records</div>
+          <div class="kpi-value" id="kpi-total">8,500</div>
+          <div class="kpi-subtext">Verified > 1,000 threshold</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">High Sleep Debt Ratio</div>
+          <div class="kpi-value" id="kpi-target-ratio">60.1%</div>
+          <div class="kpi-subtext" id="kpi-target-subtext">5,109 Debt / 3,391 Normal</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">Avg Bedtime Screentime</div>
+          <div class="kpi-value" id="kpi-screentime">58.4 m</div>
+          <div class="kpi-subtext">Range: 0m to 180m+</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">Avg Sleep Duration</div>
+          <div class="kpi-value" id="kpi-sleep-hrs">6.22 hrs</div>
+          <div class="kpi-subtext">Target: 7 - 9 hrs</div>
+        </div>
+      </div>
+
+      <!-- Summary Stats & Insights -->
+      <div class="eda-layout">
+        <div>
+          <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">Numerical Features Summary Statistics</h3>
+          <div class="table-wrapper" style="max-height: 300px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Feature Name</th>
+                  <th>Mean</th>
+                  <th>Std Dev</th>
+                  <th>Min</th>
+                  <th>25%</th>
+                  <th>Median</th>
+                  <th>75%</th>
+                  <th>Max</th>
+                </tr>
+              </thead>
+              <tbody id="eda-stats-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="insights-box">
+          <h3>Key Dataset Takeaways</h3>
+          <ul class="insights-list">
+            <li><strong>Screentime Latency:</strong> Phone usage prior to bedtime increases sleep onset delay.</li>
+            <li><strong>App Impact:</strong> Short-form video apps show higher sleep debt rates than reading apps.</li>
+            <li><strong>Screen Brightness:</strong> Brightness levels over 60% without blue light filter elevate fatigue.</li>
+            <li><strong>Caffeine Interaction:</strong> Late afternoon caffeine over 100mg reduces REM sleep percentage.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Interactive Data Visualizations -->
+    <section id="section-vis" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>4. Interactive Data Visualizations</h2>
+          <span class="section-tag">Chart.js Selection</span>
+        </div>
+        <div class="controls-group">
+          <label for="chart-dropdown" style="font-size: 0.825rem; color: var(--text-secondary); font-weight: 500;">Visualization Type:</label>
+          <select id="chart-dropdown" class="select-styled">
+            <option value="pie">1. Pie Charts: Target Class & Demographic Split</option>
+            <option value="bar">2. Bar Charts: Sleep Debt Rates by App & Occupation</option>
+            <option value="scatter">3. Scatterplot: Screentime vs. Sleep Duration</option>
+            <option value="boxplot">4. Boxplots: Feature Distributions Grouped by Target</option>
+            <option value="heatmap">5. Heatmap: Pearson Correlation Matrix</option>
+            <option value="line_countplot">6. Line Charts & Countplots: Trends & Blue Light Filter</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chart-container-box">
+        <div class="chart-meta">
+          <h3 id="chart-title">Visualizing Target Distribution</h3>
+          <p id="chart-desc">Select a visual representation from the dropdown menu to inspect exploratory chart views.</p>
+        </div>
+        <div id="chart-render-area" class="canvas-wrapper">
+          <canvas id="main-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Machine Learning Algorithms (Interactive Execution) -->
+    <section id="section-ml" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>5. Machine Learning Algorithms (Interactive Execution)</h2>
+          <span class="section-tag">Model Evaluation</span>
+        </div>
+      </div>
+
+      <!-- Model Buttons -->
+      <div class="model-selector-bar">
+        <button class="model-btn active" data-model="logistic">Logistic Regression</button>
+        <button class="model-btn" data-model="rf">Random Forest</button>
+        <button class="model-btn" data-model="knn">K-Nearest Neighbors (KNN)</button>
+        <button class="model-btn" data-model="svm">Support Vector Machine (SVM)</button>
+      </div>
+
+      <!-- Tile Metric Cards -->
+      <div class="metrics-row">
+        <div class="metric-tile">
+          <span>Accuracy</span>
+          <strong id="m-acc">--</strong>
+        </div>
+        <div class="metric-tile">
+          <span>Precision</span>
+          <strong id="m-prec">--</strong>
+        </div>
+        <div class="metric-tile">
+          <span>Recall</span>
+          <strong id="m-rec">--</strong>
+        </div>
+        <div class="metric-tile">
+          <span>F1 Score</span>
+          <strong id="m-f1">--</strong>
+        </div>
+        <div class="metric-tile">
+          <span>ROC-AUC</span>
+          <strong id="m-auc">--</strong>
+        </div>
+      </div>
+
+      <!-- Results Grid -->
+      <div class="results-grid">
+        <div class="cm-container">
+          <h4>2x2 Confusion Matrix</h4>
+          <div class="cm-grid">
+            <div class="cm-box tn">
+              <span class="label">True Negative (TN)</span>
+              <span class="count" id="cm-tn">0</span>
+            </div>
+            <div class="cm-box fp">
+              <span class="label">False Positive (FP)</span>
+              <span class="count" id="cm-fp">0</span>
+            </div>
+            <div class="cm-box fn">
+              <span class="label">False Negative (FN)</span>
+              <span class="count" id="cm-fn">0</span>
+            </div>
+            <div class="cm-box tp">
+              <span class="label">True Positive (TP)</span>
+              <span class="count" id="cm-tp">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 1rem;">
+          <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.75rem;">Feature Importance / Weights</h4>
+          <div class="canvas-wrapper" style="height: 220px;">
+            <canvas id="feature-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Model Comparison Dashboard (Side-by-Side) -->
+    <section id="section-compare" class="section-card">
+      <div class="section-header">
+        <div class="section-title">
+          <h2>6. Model Comparison Dashboard (Side-by-Side)</h2>
+          <span class="section-tag">Benchmark</span>
+        </div>
+      </div>
+
+      <div class="comparison-table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Algorithm Model</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+              <th>ROC-AUC</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="compare-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="chart-container-box">
+        <div class="chart-meta">
+          <h3>Multi-Metric Performance Comparison</h3>
+          <p>Side-by-side grouped bar chart comparing Accuracy, Precision, Recall, and F1 Score across all trained algorithms.</p>
+        </div>
+        <div class="canvas-wrapper" style="height: 300px;">
+          <canvas id="compare-chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Bedtime & Screentime Sleep Debt Intelligence Workbench • FastAPI & Chart.js</p>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
